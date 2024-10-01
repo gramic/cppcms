@@ -1,0 +1,290 @@
+load("@aspect_bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
+
+genrule(
+    name = "booster_config",
+    outs = ["booster/booster/build_config.h"],
+    cmd = "echo '#pragma once' > $@;" +
+          """echo '#define BOOSTER_HAVE_STDINT_H' >> $@;""" +
+          """echo '#define BOOSTER_HAVE_INTTYPES_H' >> $@;""" +
+          """echo '#define BOOSTER_LIBRARY_SUFFIX ".so"' >> $@;""" +
+          """echo '#define BOOSTER_LIBRARY_PREFIX "lib"' >> $@;""" +
+          """echo '#define BOOSTER_POSIX' >> $@;""",
+)
+
+cc_library(
+    name = "booster",
+    srcs = [
+        "booster/lib/aio/src/acceptor.cpp",
+        "booster/lib/aio/src/aio_category.cpp",
+        "booster/lib/aio/src/basic_io_device.cpp",
+        "booster/lib/aio/src/basic_socket.cpp",
+        "booster/lib/aio/src/category.h",
+        "booster/lib/aio/src/deadline_timer.cpp",
+        "booster/lib/aio/src/endpoint.cpp",
+        "booster/lib/aio/src/io_service.cpp",
+        "booster/lib/aio/src/reactor.cpp",
+        "booster/lib/aio/src/reactor_config.h",
+        "booster/lib/aio/src/select_iterrupter.cpp",
+        "booster/lib/aio/src/select_iterrupter.h",
+        "booster/lib/aio/src/socket_details.h",
+        "booster/lib/aio/src/stream_socket.cpp",
+        "booster/lib/backtrace/src/backtrace.cpp",
+        "booster/lib/iostreams/src/streambuf.cpp",
+        "booster/lib/locale/src/encoding/codepage.cpp",
+        "booster/lib/locale/src/icu/boundary.cpp",
+        "booster/lib/locale/src/icu/codecvt.cpp",
+        "booster/lib/locale/src/icu/collator.cpp",
+        "booster/lib/locale/src/icu/conversion.cpp",
+        "booster/lib/locale/src/icu/date_time.cpp",
+        "booster/lib/locale/src/icu/formatter.cpp",
+        "booster/lib/locale/src/icu/icu_backend.cpp",
+        "booster/lib/locale/src/icu/numeric.cpp",
+        "booster/lib/locale/src/icu/time_zone.cpp",
+        "booster/lib/locale/src/icu/all_generator.h",
+        "booster/lib/locale/src/icu/cdata.h",
+        "booster/lib/locale/src/icu/codecvt.h",
+        "booster/lib/locale/src/icu/formatter.h",
+        "booster/lib/locale/src/icu/icu_backend.h",
+        "booster/lib/locale/src/icu/icu_util.h",
+        "booster/lib/locale/src/icu/predefined_formatters.h",
+        "booster/lib/locale/src/icu/time_zone.h",
+        "booster/lib/locale/src/icu/uconv.h",
+        "booster/lib/locale/src/encoding/conv.h",
+        "booster/lib/locale/src/shared/date_time.cpp",
+        "booster/lib/locale/src/shared/format.cpp",
+        "booster/lib/locale/src/shared/formatting.cpp",
+        "booster/lib/locale/src/shared/generator.cpp",
+        "booster/lib/locale/src/shared/ids.cpp",
+        "booster/lib/locale/src/shared/ios_prop.h",
+        "booster/lib/locale/src/shared/localization_backend.cpp",
+        "booster/lib/locale/src/shared/message.cpp",
+        "booster/lib/locale/src/shared/mo_hash.h",
+        "booster/lib/locale/src/shared/mo_lambda.cpp",
+        "booster/lib/locale/src/shared/mo_lambda.h",
+        "booster/lib/locale/src/std/codecvt.cpp",
+        "booster/lib/locale/src/std/collate.cpp",
+        "booster/lib/locale/src/std/converter.cpp",
+        "booster/lib/locale/src/std/numeric.cpp",
+        "booster/lib/locale/src/std/std_backend.cpp",
+        "booster/lib/locale/src/util/codecvt_converter.cpp",
+        "booster/lib/locale/src/util/default_locale.cpp",
+        "booster/lib/locale/src/util/gregorian.cpp",
+        "booster/lib/locale/src/util/gregorian.h",
+        "booster/lib/locale/src/util/info.cpp",
+        "booster/lib/locale/src/util/locale_data.cpp",
+        "booster/lib/locale/src/util/locale_data.h",
+        "booster/lib/locale/src/util/numeric.h",
+        "booster/lib/locale/src/util/timezone.h",
+        "booster/lib/log/src/log.cpp",
+        "booster/lib/nowide/src/convert.cpp",
+        "booster/lib/ptime/src/ctime.cpp",
+        "booster/lib/ptime/src/posix_time.cpp",
+        # "booster/lib/regex/src/pcre_regex.cpp",
+        "booster/lib/regex/src/std_regex.cpp",
+        "booster/lib/shared_object/src/shared_object.cpp",
+        "booster/lib/smart_ptr/src/atomic_counter.cpp",
+        # "booster/lib/smart_ptr/src/sp_counted_base.cpp",
+        # "booster/lib/system/src/posix_error.cpp",
+        # "booster/lib/system/src/windows_error.cpp",
+        "booster/lib/thread/src/pthread.cpp",
+    ],
+    hdrs = [
+        ":booster_config",
+        "booster/lib/locale/src/std/all_generator.h",
+        "booster/lib/locale/src/std/std_backend.h",
+        "booster/lib/locale/src/encoding/conv.h",
+        "booster/lib/locale/src/icu/all_generator.h",
+        "booster/lib/locale/src/icu/cdata.h",
+        "booster/lib/locale/src/icu/codecvt.h",
+        "booster/lib/locale/src/icu/formatter.h",
+        "booster/lib/locale/src/icu/icu_backend.h",
+        "booster/lib/locale/src/icu/icu_util.h",
+        "booster/lib/locale/src/icu/predefined_formatters.h",
+        "booster/lib/locale/src/icu/time_zone.h",
+        "booster/lib/locale/src/icu/uconv.h",
+        "booster/lib/locale/src/encoding/uconv_codepage.ipp",
+    ] + glob(
+        [
+            "booster/booster/**/*.h",
+        ],
+    ),
+    copts = [
+        "-DBOOSTER_LOCALE_NO_ICONV",
+        "-DBOOSTER_LOCALE_NO_WINAPI_BACKEND",
+        "-DBOOSTER_LOCALE_NO_POSIX_BACKEND",
+        "-DBOOSTER_LOCALE_WITH_ICU",
+        # "-DBOOSTER_LOCALE_NO_STD_BACKEND",
+        "-DU_STATIC_IMPLEMENTATION",
+        "-Wno-deprecated-declarations",
+    ],
+    includes = [
+        "booster/",
+        "booster/lib/test/",
+    ],
+    visibility = ["//visibility:public"],
+    deps = [
+        # "@pcre2",
+        "@icu",
+        # "@zlib",
+    ],
+)
+
+genrule(
+    name = "cppcms_config",
+    outs = ["cppcms/config.h"],
+    cmd = "echo '#pragma once' > $@;" +
+          """echo '#define CPPCMS_HAVE_STDINT_H' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_ATOLL' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_STAT' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_BSD_TM' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_SNPRINTF' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_INTTYPES_H' >> $@;""" +
+          """echo '#define CPPCMS_HAS_CHAR16_T' >> $@;""" +
+          """echo '#define CPPCMS_HAS_CHAR32_T' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_GCC_TYPEOF' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_OPENSSL' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_STD_WSTRING' >> $@;""" +
+          """echo '#define CPPCMS_NO_STD_WSTRING' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_CANONICALIZE_FILE_NAME' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_UNDERSCORE_TYPEOF' >> $@;""" +
+          """echo '#define CPPCMS_PACKAGE_NAME "CppCMS"' >> $@;""" +
+          """echo '#define CPPCMS_PACKAGE_STRING "CppCMS/1.2.0"' >> $@;""" +
+          """echo '#define CPPCMS_PACKAGE_VERSION "1.2.0"' >> $@;""" +
+          """echo '#define CPPCMS_LIBRARY_SUFFIX ".so"' >> $@;""" +
+          """echo '#define CPPCMS_LIBRARY_PREFIX "lib"' >> $@;""" +
+          """echo '#define CPPCMS_NO_GZIP "lib"' >> $@;""" +
+          """echo '#define CPPCMS_HAS_HTTP' >> $@;""" +
+          """echo '#define CPPCMS_HAS_THREAD_PSHARED' >> $@;""" +
+          """echo '#define CPPCMS_HAVE_FSEEKO' >> $@;""",
+)
+
+copy_to_directory(
+    name = "cppcms_dir",
+    srcs = [":cppcms", ":cppcms_config"],
+    include_srcs_packages = [
+        "./**",
+    ],
+)
+
+CPPCMS_SOURCES = [
+    "src/service.cpp",
+    "src/cgi_api.cpp",
+    "src/http_request.cpp",
+    "src/http_response.cpp",
+    "src/http_context.cpp",
+    "src/cppcms_error.cpp",
+    "src/cppcms_error_category.cpp",
+    "src/thread_pool.cpp",
+    "src/applications_pool.cpp",
+    "src/application.cpp",
+    "src/url_dispatcher.cpp",
+    "src/url_mapper.cpp",
+    "src/http_cookie.cpp",
+    "src/http_file.cpp",
+    "src/http_content_type.cpp",
+    "src/util.cpp",
+    "src/base64.cpp",
+    "src/base_view.cpp",
+    "src/base_content.cpp",
+    "src/views_pool.cpp",
+    "src/internal_file_server.cpp",
+    "src/json.cpp",
+    "src/encoding.cpp",
+    "src/form.cpp",
+    "src/filters.cpp",
+    "src/cache_pool.cpp",
+    "src/cache_interface.cpp",
+    "src/cache_storage.cpp",
+    "src/forwarder.cpp",
+    "src/session_pool.cpp",
+    "src/hmac_encryptor.cpp",
+    "src/aes_encryptor.cpp",
+    "src/md5.cpp",
+    "src/urandom.cpp",
+    "src/aes.cpp",
+    "src/session_cookies.cpp",
+    "src/session_dual.cpp",
+    "src/session_sid.cpp",
+    "src/session_interface.cpp",
+    "src/session_memory_storage.cpp",
+    "src/rpc_json.cpp",
+    "src/mount_point.cpp",
+    "src/archive.cpp",
+    "src/crypto.cpp",
+    "src/xss.cpp",
+    "src/copy_filter.cpp",
+    "src/send_timeout.cpp",
+    "src/http_content_filter.cpp",
+    "src/plugin.cpp",
+    "src/capi/session.cpp",
+    "src/session_posix_file_storage.cpp",
+    "src/daemonize.cpp",
+]
+
+TCPCACHE = [
+    "src/tcp_cache_client.cpp",
+    "src/cache_over_ip.cpp",
+    "src/tcp_messenger.cpp",
+    "src/tcp_connector.cpp",
+    "src/tcp_cache_server.cpp",
+    "src/session_tcp_storage.cpp",
+]
+
+# FCGI = [
+#     "src/fastcgi_api.cpp",
+# ]
+#
+# SCGI = [
+#     "src/scgi_api.cpp",
+# ]
+
+HTTP = [
+    "src/http_api.cpp",
+]
+
+cc_library(
+    name = "cppcms_lib",
+    srcs = [] + CPPCMS_SOURCES + TCPCACHE + HTTP,
+    hdrs = [
+        ":cppcms_dir",
+    ] + glob(["private/**"]),
+    copts = [
+        "-DCPPCMS_NO_CACHE",
+        "-Iprivate",
+    ],
+    includes = [
+        "cppcms_dir",
+    ],
+    linkstatic = True,
+    visibility = ["//visibility:public"],
+    deps = [
+        "@icu",
+        "//:booster",
+        "@boringssl//:crypto",
+        "@boringssl//:ssl",
+    ],
+)
+
+cc_binary(
+    name = "testicu",
+    srcs = ["testicu.cpp"],
+    features = ["fully_static_link"],
+    copts = [
+        # "-DU_DISABLE_RENAMING",
+        "-Iicu/include",
+    ],
+    deps = [
+        "@icu",
+    ],
+)
+
+cc_binary(
+    name = "hello_booster",
+    srcs = ["hello_booster.cpp"],
+    deps = [
+        "@icu",
+        ":booster",
+        "@pcre2",
+    ],
+)

@@ -1,0 +1,30 @@
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+
+genrule(
+    name = "generate_view",
+    srcs = ["view.tmpl", "content.h"],
+    outs = ["view.cpp"],
+    cmd = "./$(execpath //bin:cppcms_tmpl_tool) $(execpath view.tmpl) -o \"$@\"",
+    tools = ["//bin:cppcms_tmpl_tool"],
+)
+
+cc_library(
+    name = "view_lib",
+    srcs = ["view.cpp"],
+    hdrs = ["content.h"],
+    includes = ["."],
+    deps = ["//:cppcms_lib", ":generate_view"],
+)
+
+cc_binary(
+    name = "hello",
+    srcs = ["hello.cpp", "view.cpp"],
+    data = ["config.js"],
+    deps = [
+        "//:cppcms_lib",
+        ":view_lib",
+        "@icu",
+        "//:booster",
+        "@zlib",
+    ],
+)

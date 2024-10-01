@@ -1,0 +1,17 @@
+load("@aspect_bazel_lib//lib:copy_file.bzl", "copy_file")
+load("@rules_python//python:defs.bzl", "py_binary")
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+copy_file(
+    name = "cppcms_tmpl_tool_py",
+    src = "cppcms_tmpl_cc",
+    out = "cppcms_tmpl_tool.py",
+)
+
+py_binary(
+    name = "cppcms_tmpl_tool",
+    srcs = [":cppcms_tmpl_tool_py"],
+)

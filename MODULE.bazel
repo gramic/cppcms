@@ -1,0 +1,95 @@
+module(
+    name = "cppcms_workspace",
+    version = "2.0.0",
+    repo_name = "cppcms_workspace",
+)
+
+bazel_dep(name = "aspect_rules_js", version = "1.39.0")
+bazel_dep(name = "aspect_rules_swc", version = "1.0.1")
+bazel_dep(name = "aspect_rules_ts", version = "1.4.5")
+bazel_dep(name = "zlib", version = "1.3.1.bcr.3")
+bazel_dep(name = "pcre2", version = "10.43")
+bazel_dep(name = "rules_python", version = "0.36.0")
+
+# bazel_dep(name = "boringssl", version = "0.20240913.0", repo_name = "openssl")
+bazel_dep(name = "boringssl", version = "0.20240913.0")
+bazel_dep(name = "aspect_bazel_lib", version = "2.9.1")
+bazel_dep(name = "container_structure_test", version = "1.15.0")
+bazel_dep(name = "googletest", version = "1.14.0.bcr.1")
+bazel_dep(name = "rules_license", version = "0.0.8")
+bazel_dep(name = "rules_python_gazelle_plugin", version = "0.23.1")
+bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "1.4.2")
+bazel_dep(name = "abseil-py", version = "2.1.0")
+bazel_dep(name = "abseil-cpp", version = "20240116.2")
+bazel_dep(name = "rules_rust", version = "0.46.0")
+bazel_dep(name = "rules_foreign_cc", version = "0.12.0")
+bazel_dep(name = "rules_proto_grpc_cpp", version = "5.0.0")
+bazel_dep(name = "rules_proto_grpc_python", version = "5.0.0")
+
+#####################################################################
+# Hedron's Compile Commands Extractor for Bazel
+#####################################################################
+
+# https://github.com/hedronvision/bazel-compile-commands-extractor
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+    commit = "1e08f8e0507b6b6b1f4416a9a22cf5c28beaba93",
+    # Replace the commit hash (above) with the latest (https://github.com/hedronvision/bazel-compile-commands-extractor/commits/main).
+    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+)
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+#####################################################################
+# icu library
+#####################################################################
+
+http_archive(
+    name = "icu",
+    build_file = "@cppcms_workspace//third_party:BUILD.icu.bazel",
+    strip_prefix = "icu",
+    urls = ["https://github.com/unicode-org/icu/releases/download/release-75-1/icu4c-75_1-src.tgz"],
+    patch_args = ["-p1"],
+    patches = [
+        "@cppcms_workspace//third_party:icu-source-common.patch",
+        "@cppcms_workspace//third_party:icu-source-icudefs.patch",
+        "@cppcms_workspace//third_party:icu-source-data-unidata-norm2.patch",
+        "@cppcms_workspace//third_party:icu-source-i18n.patch",
+        "@cppcms_workspace//third_party:icu-source-stubdata.patch",
+        "@cppcms_workspace//third_party:icu-source-tools-gennorm2.patch",
+        "@cppcms_workspace//third_party:icu-source-tools-toolutil.patch",
+    ],
+)
+
+#####################################################################
+# toolchains_llvm
+#####################################################################
+
+# bazel_dep(name = "toolchains_llvm", version = "1.2.0")
+
+#####################################################################
+# hermetic cc toolchain
+#####################################################################
+
+bazel_dep(name = "hermetic_cc_toolchain", version = "3.1.1")
+
+zig_toolchains = use_extension("@hermetic_cc_toolchain//toolchain:ext.bzl", "toolchains")
+use_repo(zig_toolchains, "zig_sdk")
+
+register_toolchains(
+    # "@zig_sdk//toolchain:linux_amd64_gnu.2.32",
+    "@zig_sdk//toolchain:linux_amd64_gnu.2.31",
+    # "@zig_sdk//libc_aware/toolchain:x86_64-linux-gnu.2.34",
+)
+
+#####################################################################
+# other
+#####################################################################
+
+bazel_dep(name = "rules_cc", version = "0.0.9")
+bazel_dep(name = "platforms", version = "0.0.10")
+bazel_dep(name = "rules_proto", version = "6.0.2")
+bazel_dep(name = "nlohmann_json", version = "3.11.3")
+bazel_dep(name = "spdlog", version = "1.14.1")
