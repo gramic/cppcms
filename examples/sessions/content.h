@@ -1,5 +1,4 @@
-#ifndef CONTENT_H
-#define CONTENT_H
+#pragma once
 
 #include <cppcms/view.h>
 #include <cppcms/form.h>
@@ -54,7 +53,3 @@ struct message : public cppcms::base_content {
 };
 
 } // content
-
-
-#endif
-// vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4

@@ -125,7 +125,11 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         # "@pcre2",
-        "@icu",
+        "@icu//icu4c/source/i18n:headers",
+        "@icu//icu4c/source/i18n:collation",
+        "@icu//icu4c/source/common:breakiterator",
+        "@icu//icu4c/source/common:platform",
+        "@icu//icu4c/source/common:uniset",
         # "@zlib",
     ],
 )
@@ -259,7 +263,8 @@ cc_library(
     linkstatic = True,
     visibility = ["//visibility:public"],
     deps = [
-        "@icu",
+        "@icu//icu4c/source/common:breakiterator",
+        "@icu//icu4c/source/common:uniset",
         "//:booster",
         "@boringssl//:crypto",
         "@boringssl//:ssl",

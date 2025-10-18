@@ -19,12 +19,22 @@ cc_library(
 cc_binary(
     name = "hello",
     srcs = ["hello.cpp", "view.cpp"],
-    data = ["config.js"],
+    data = [
+      "config.js",
+      "@icu_dat//:icu_dat",
+    ],
+    cxxopts = [
+      "-std=c++2c",
+    ],
     deps = [
         "//:cppcms_lib",
         ":view_lib",
-        "@icu",
+        "@icu//icu4c/source/common:breakiterator",
+        "@icu//icu4c/source/i18n:collation",
+        "@icu//icu4c/source/common:uniset",
         "//:booster",
+        "@icu//icu4c/source/common:platform",
+        "@rules_cc//cc/runfiles",
         "@zlib",
     ],
 )
